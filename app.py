@@ -19,8 +19,13 @@ app = Flask(__name__)
 
 from flask_sqlalchemy import SQLAlchemy
 # https://stackoverflow.com/questions/62688256/sqlalchemy-exc-nosuchmoduleerror-cant-load-plugin-sqlalchemy-dialectspostgre
-app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://jbqvbspvbrhvny:a91c3592c123611e479bfa6d2e9121695f2ef49a2642fa2a2a81e77b95f62991@ec2-23-20-140-229.compute-1.amazonaws.com:5432/de7o1fh4r2d0e9"
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://jbqvbspvbrhvny:a91c3592c123611e479bfa6d2e9121695f2ef49a2642fa2a2a81e77b95f62991@ec2-23-20-140-229.compute-1.amazonaws.com:5432/de7o1fh4r2d0e9"
+
 # os.environ.get('DATABASE_URL', '') or "sqlite:///db.sqlite"
+uri = os.getenv("DATABASE_URL","")
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://","postgresql://",1)
+app.config['SQLALCHEMY_DATABASE_URI'] = uri or "sqlite:///db.sqlite"
 
 # Remove tracking modifications
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
